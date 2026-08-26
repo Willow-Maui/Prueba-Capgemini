@@ -17,13 +17,13 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class NotificationFeignConfig {
 
-    @Bean
+    @Bean(name = "notificationRetryer")
     public Retryer retryer() {
         // Retry: initial interval 100ms, max interval 1000ms, 2 attempts
         return new Retryer.Default(100, 1000, 2);
     }
 
-    @Bean
+    @Bean(name = "notificationLoggerLevel")
     public feign.Logger.Level feignLoggerLevel() {
         return feign.Logger.Level.FULL;
     }

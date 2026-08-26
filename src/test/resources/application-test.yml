@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: capgemini-test-test
+
+  # ==================== TEST DATABASE CONFIGURATION ====================
+  datasource:
+    writedb:
+      url: jdbc:h2:mem:testdb;MODE=PostgreSQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      hikari:
+        maximum-pool-size: 5
+        minimum-idle: 1
+
+    readdb:
+      url: jdbc:h2:mem:testdb_read;MODE=MySQL
+      username: sa
+      password:
+      driver-class-name: org.h2.Driver
+      hikari:
+        maximum-pool-size: 5
+        minimum-idle: 1
+
+  # ==================== JPA CONFIGURATION ====================
+  jpa:
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+  # ==================== KAFKA CONFIGURATION (Embedded for tests) ====================
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: test-group
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+
+  # ==================== DISABLE FLYWAY FOR TESTS ====================
+  flyway:
+    enabled: false
+
+# ==================== LOGGING ====================
+logging:
+  level:
+    root: INFO
+    com.capgemini.test.code: INFO
+    org.springframework: WARN
+
+# ==================== SERVER CONFIGURATION ====================
+server:
+  port: 0  # Random port for tests
+
+# ==================== EXTERNAL APIS (Mock Server) ====================
+external:
+  dni-validation:
+    url: "http://localhost:1080"
+    timeout: 5000
+  notification:
+    url: "http://localhost:1080"
+    timeout: 5000
+

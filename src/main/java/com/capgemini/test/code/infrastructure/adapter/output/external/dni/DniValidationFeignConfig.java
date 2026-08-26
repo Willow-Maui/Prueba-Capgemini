@@ -17,13 +17,13 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class DniValidationFeignConfig {
 
-    @Bean
+    @Bean(name = "dniRetryer")
     public Retryer retryer() {
         // Retry: initial interval 100ms, max interval 1000ms, 3 attempts
         return new Retryer.Default(100, 1000, 3);
     }
 
-    @Bean
+    @Bean(name = "dniLoggerLevel")
     public feign.Logger.Level feignLoggerLevel() {
         return feign.Logger.Level.FULL;
     }
