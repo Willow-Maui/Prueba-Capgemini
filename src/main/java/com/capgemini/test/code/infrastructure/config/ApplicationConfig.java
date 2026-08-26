@@ -18,15 +18,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * ApplicationConfig - Configuración de inyección de dependencias
+ * Configuración de inyección de dependencias (ApplicationConfig).
  *
- * Define los beans de:
- * - Use Cases
- * - Adaptadores (persistence, external)
- * - Puertos
- * - Utilities
+ * Responsabilidad:
+ * - Instanciar beans de Use Cases sin @Component ni @Service
+ * - Inyectar puertos (interfaces) en Use Cases
+ * - Exponer adaptadores como beans de puertos
+ * - Configurar utilidades (ObjectMapper, etc.)
  *
- * Patrón: Dependency Injection (Spring)
+ * Patrón: Inversión de Control (IoC) mediante @Bean
+ * Los Use Cases se instancian manualmente, no con @Component,
+ * garantizando que Application Layer es agnóstico de Spring.
+ *
+ * Capas representadas:
+ * - Ports (UserRepository, DniValidationPort, NotificationPort) → Interfaces
+ * - Adapters (UserPersistenceAdapter, DniValidationAdapter, etc.) → Implementaciones
+ * - Use Cases (CreateUserUseCase, GetUserUseCase) → Orquestación
  */
 @Configuration
 @RequiredArgsConstructor
@@ -38,29 +45,62 @@ public class ApplicationConfig {
     private final NotificationAdapter notificationAdapter;
 
     // ==================== PORTS ====================
+    // Exponen adaptadores como puertos
 
+    /**
+     * Expone el adaptador de persistencia como puerto de repositorio de usuario.
+     *
+     * @return UserRepository interface, implementada por UserPersistenceAdapter
+     */
     @Bean
     public UserRepository userRepository() {
         return userPersistenceAdapter;
     }
 
+    /**
+     * Expone el adaptador de persistencia como puerto de repositorio de sala.
+     *
+     * @return RoomRepository interface, implementada por RoomPersistenceAdapter
+     */
     @Bean
     public RoomRepository roomRepository() {
         return roomPersistenceAdapter;
     }
 
+    /**
+     * Expone el adaptador externo como puerto de validación de DNI.
+     *
+     * @return DniValidationPort interface, implementada por DniValidationAdapter
+     */
     @Bean
     public DniValidationPort dniValidationPort() {
         return dniValidationAdapter;
     }
 
+    /**
+     * Expone el adaptador externo como puerto de notificaciones.
+     *
+     * @return NotificationPort interface, implementada por NotificationAdapter
+     */
     @Bean
     public NotificationPort notificationPort() {
         return notificationAdapter;
     }
 
     // ==================== USE CASES ====================
+    // Instancia Use Cases manualmente (sin @Component)
+    // Esto garantiza que Application Layer es agnóstico de Spring
 
+    /**
+     * Instancia el Use Case de creación de usuario.
+     *
+     * Inyecta:
+     * - UserRepository (para persistencia)
+     * - DniValidationPort (para validación externa)
+     * - NotificationPort (para notificaciones)
+     *
+     * @return CreateUserUseCase bean
+     */
     @Bean
     public CreateUserUseCase createUserUseCase() {
         return new CreateUserUseCase(
@@ -70,6 +110,14 @@ public class ApplicationConfig {
         );
     }
 
+    /**
+     * Instancia el Use Case de lectura de usuario.
+     *
+     * Inyecta:
+     * - UserRepository (para persistencia)
+     *
+     * @return GetUserUseCase bean
+     */
     @Bean
     public GetUserUseCase getUserUseCase() {
         return new GetUserUseCase(userRepository());
@@ -77,6 +125,15 @@ public class ApplicationConfig {
 
     // ==================== UTILITIES ====================
 
+    /**
+     * Configura ObjectMapper para serialización/deserialización JSON.
+     *
+     * Características:
+     * - Soporta LocalDateTime y LocalDate
+     * - No serializa fechas como timestamps
+     *
+     * @return ObjectMapper configurado
+     */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();

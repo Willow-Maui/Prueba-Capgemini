@@ -1,4 +1,4 @@
-HELP.md
+*.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/PASO_1_COMPLETADO.md
+/.context-config.json
+/src/main/java/com/capgemini/test/code/LAYER_RESPONSIBILITIES.properties

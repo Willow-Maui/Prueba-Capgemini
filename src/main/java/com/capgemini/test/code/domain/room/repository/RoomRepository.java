@@ -17,5 +17,12 @@ public interface RoomRepository {
    *         si la sala no existe
    */
   Room findById(Long roomId);
+
+  /**
+   * Guarda una sala en la persistencia.
+   * @param room la sala a guardar
+   * @return la sala guardada
+   */
+  Room save(Room room);
 }
 

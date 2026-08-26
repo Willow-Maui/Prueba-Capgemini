@@ -5,8 +5,7 @@ import com.capgemini.test.code.domain.user.exceptions.InvalidDniException;
 import com.capgemini.test.code.domain.user.exceptions.InvalidPhoneException;
 import com.capgemini.test.code.domain.user.exceptions.InvalidRoleException;
 import com.capgemini.test.code.domain.user.exceptions.InvalidUserNameException;
-
-import java.util.Objects;
+import lombok.Data;
 
 /**
  * Entidad de dominio que representa un Usuario.
@@ -21,7 +20,11 @@ import java.util.Objects;
  * - roomId: Long (ID de la sala)
  *
  * Immutable. Use Builder para crear instancias.
+ *
+ * Patrón: Entidad con validaciones en builder.
+ * Las excepciones lanzadas son de negocio (DomainException).
  */
+@Data
 public class User {
 
   private final Long id;
@@ -45,74 +48,22 @@ public class User {
 
   /**
    * Factory method para crear un User usando Builder.
+   *
+   * @return nuevo builder para construir User
    */
   public static Builder builder() {
     return new Builder();
   }
 
-  // Getters
-  public Long getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getDni() {
-    return dni;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public UserRole getRole() {
-    return role;
-  }
-
-  public Long getRoomId() {
-    return roomId;
-  }
-
   /**
-   * Obtiene el canal de notificación según el rol.
+   * Obtiene el canal de notificación según el rol del usuario.
+   *
+   * @return NotificationChannel (EMAIL o SMS)
    */
   public UserRole.NotificationChannel getNotificationChannel() {
     return role.getNotificationChannel();
   }
 
-  /**
-   * La identidad de un usuario es su email (es único en el sistema).
-   * Dos usuarios con el mismo email se consideran el mismo usuario.
-   */
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof User)) return false;
-    User user = (User) o;
-    return Objects.equals(email, user.email);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(email);
-  }
-
-  @Override
-  public String toString() {
-    return "User{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", email='" + email + '\'' +
-        ", role=" + role +
-        ", roomId=" + roomId +
-        '}';
-  }
 
   /**
    * Builder para crear instancias de User de forma segura y validada.
@@ -156,79 +107,101 @@ public class User {
       return this;
     }
 
-    /**
-     * Construye y valida el User.
-     *
-     * Validaciones aplicadas:
-     * - Nombre: no vacío, máximo 6 caracteres
-     * - Email: no vacío, contiene @ y .
-     * - DNI: no vacío
-     * - Rol: no vacío, ADMIN o SUPERADMIN
-     * - Phone: obligatorio para SUPERADMIN, opcional para ADMIN
-     * - RoomId: no nulo y positivo
-     *
-     * @return User instancia validada
-     */
-    public User build() {
-      // Validar nombre
-      if (name == null || name.isBlank()) {
-        throw new InvalidUserNameException("Name cannot be empty");
-      }
-      if (name.length() > 6) {
-        throw new InvalidUserNameException("Name cannot exceed 6 characters");
-      }
+   /**
+    * Construye y valida el User.
+    *
+    * Validaciones de dominio aplicadas:
+    * - Nombre: no vacío, máximo 6 caracteres
+    * - Email: no vacío, contiene @ y .
+    * - DNI: no vacío
+    * - Rol: no vacío, ADMIN o SUPERADMIN
+    * - Phone: obligatorio para SUPERADMIN, opcional para ADMIN
+    * - RoomId: no nulo y positivo
+    *
+    * @return User instancia validada de negocio
+    * @throws InvalidUserNameException si nombre no cumple validaciones
+    * @throws InvalidEmailException si email no cumple validaciones
+    * @throws InvalidDniException si DNI está vacío
+    * @throws InvalidRoleException si rol no es válido
+    * @throws InvalidPhoneException si phone requerido no existe
+    * @throws IllegalArgumentException si roomId no es válido
+    */
+   public User build() {
+     validateName();
+     validateEmail();
+     validateDni();
+     UserRole userRole = validateAndParseRole();
+     validatePhoneForRole(userRole);
+     validateRoomId();
 
-      // Validar email
-      if (email == null || email.isBlank()) {
-        throw new InvalidEmailException("Email cannot be empty");
-      }
-      if (!email.contains("@")) {
-        throw new InvalidEmailException("Email must contain @");
-      }
-      if (!email.contains(".")) {
-        throw new InvalidEmailException("Email must contain .");
-      }
+     return new User(null, name.trim(), email.trim(), dni.trim(),
+                     phone != null ? phone.trim() : null, userRole, roomId);
+   }
 
-      // Validar DNI
-      if (dni == null || dni.isBlank()) {
-        throw new InvalidDniException("DNI cannot be empty");
-      }
+   /**
+    * Construye un User con un ID específico (usado principalmente en lectura desde BD).
+    *
+    * @param userId ID asignado por la base de datos
+    * @return User instancia con ID
+    */
+   public User buildWithId(Long userId) {
+     User user = build();
+     return new User(userId, user.name, user.email, user.dni, user.phone, user.role, user.roomId);
+   }
 
-      // Validar role
-      if (role == null || role.isBlank()) {
-        throw new InvalidRoleException("Role cannot be empty");
-      }
-      UserRole userRole;
-      try {
-        userRole = UserRole.valueOf(role.toUpperCase());
-      } catch (IllegalArgumentException e) {
-        throw new InvalidRoleException(role);
-      }
+   // ==================== VALIDACIONES PRIVADAS ====================
 
-      // Validar phone (obligatorio para SUPERADMIN)
-      if (userRole == UserRole.SUPERADMIN) {
-        if (phone == null || phone.isBlank()) {
-          throw new InvalidPhoneException("Phone is required for SUPERADMIN");
-        }
-      }
+   private void validateName() {
+     if (name == null || name.isBlank()) {
+       throw new InvalidUserNameException("Name cannot be empty");
+     }
+     if (name.length() > 6) {
+       throw new InvalidUserNameException("Name cannot exceed 6 characters");
+     }
+   }
 
-      // Validar roomId
-      if (roomId == null || roomId <= 0) {
-        throw new IllegalArgumentException("RoomId must be positive");
-      }
+   private void validateEmail() {
+     if (email == null || email.isBlank()) {
+       throw new InvalidEmailException("Email cannot be empty");
+     }
+     if (!email.contains("@")) {
+       throw new InvalidEmailException("Email must contain @");
+     }
+     if (!email.contains(".")) {
+       throw new InvalidEmailException("Email must contain .");
+     }
+   }
 
-      // Crear y retornar User (sin ID, lo asignará la BD)
-      return new User(null, name.trim(), email.trim(), dni.trim(),
-                      phone != null ? phone.trim() : null, userRole, roomId);
-    }
+   private void validateDni() {
+     if (dni == null || dni.isBlank()) {
+       throw new InvalidDniException("DNI cannot be empty");
+     }
+   }
 
-    /**
-     * Construye un User con un ID específico (usado principalmente en lectura desde BD).
-     */
-    public User buildWithId(Long userId) {
-      User user = build();
-      return new User(userId, user.name, user.email, user.dni, user.phone, user.role, user.roomId);
-    }
+   private UserRole validateAndParseRole() {
+     if (role == null || role.isBlank()) {
+       throw new InvalidRoleException("Role cannot be empty");
+     }
+     try {
+       return UserRole.valueOf(role.toUpperCase());
+     } catch (IllegalArgumentException e) {
+       throw new InvalidRoleException(role);
+     }
+   }
+
+   private void validatePhoneForRole(UserRole userRole) {
+     if (userRole == UserRole.SUPERADMIN) {
+       if (phone == null || phone.isBlank()) {
+         throw new InvalidPhoneException("Phone is required for SUPERADMIN");
+       }
+     }
+   }
+
+   private void validateRoomId() {
+     if (roomId == null || roomId <= 0) {
+       throw new IllegalArgumentException("RoomId must be positive");
+     }
+   }
   }
 }
 
