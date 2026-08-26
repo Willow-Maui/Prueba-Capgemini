@@ -1,4 +1,4 @@
-package com.capgemini.test.code.clients;
+package com.capgemini.test.code.infrastructure.adapter.output.external.dni.clients;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
