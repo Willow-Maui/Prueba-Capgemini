@@ -101,11 +101,10 @@
 
     <!-- ==================== TESTING DEPENDENCIES ==================== -->
 
-    <!-- Kafka Test (EmbeddedKafka) -->
+    <!-- Kafka Test (EmbeddedKafka para desarrollo local) -->
     <dependency>
       <groupId>org.springframework.kafka</groupId>
       <artifactId>spring-kafka-test</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <!-- H2 Database (In-Memory para tests de persistencia) -->

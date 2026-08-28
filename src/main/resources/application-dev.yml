@@ -2,7 +2,7 @@ spring:
   application:
     name: capgemini-test
 
-  # ==================== WriteDB (PostgreSQL) - Base de datos de escritura (previa, sin cambios) ====================
+  # ==================== WriteDB (PostgreSQL) - Base de datos de escritura ====================
   datasource:
     writedb:
       url: jdbc:postgresql://localhost:5432/users
@@ -15,7 +15,7 @@ spring:
         idle-timeout: 300000
         connection-timeout: 20000
 
-    # ==================== ReadDB (MySQL) - Réplica de lectura (nueva) ====================
+    # ==================== ReadDB (MySQL) - Réplica de lectura ====================
     readdb:
       url: jdbc:mysql://localhost:3306/capgemini_readdb
       username: root
@@ -34,20 +34,16 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
-    # Disable global ddl-auto, each datasource manages its own
     hibernate:
       ddl-auto: validate
 
   # ==================== Flyway Configuration ====================
-  # Desabilitado porque tenemos datasources personalizados (writedb/readdb)
-  # Spring Boot no puede auto-configurar Flyway correctamente
   flyway:
     enabled: false
 
-  # ==================== Kafka Configuration ====================
-  # Kafka está embebido en la aplicación (no requiere servidor externo)
+  # ==================== Kafka Configuration - DISABLED for local dev ====================
   kafka:
-    bootstrap-servers: localhost:9092  # (no se usa - solo referencia)
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -66,8 +62,7 @@ logging:
   level:
     root: INFO
     com.capgemini.test.code: DEBUG
-    org.springframework.kafka: INFO
-    org.apache.kafka: WARN
+    org.springframework.kafka: WARN
     org.hibernate: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
@@ -91,3 +86,4 @@ external:
     timeout: 5000
     max-retries: 2
     connection-timeout: 3000
+

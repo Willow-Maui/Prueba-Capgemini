@@ -40,7 +40,7 @@ public class EventPublisher {
         try {
             String payload = objectMapper.writeValueAsString(user);
 
-            // Guardar en Event Store
+            // Guardar en Event Store (CRÍTICO - debe funcionar siempre)
             EventEntity event = EventEntity.builder()
                 .eventType("USER_CREATED")
                 .aggregateType("USER")
@@ -52,23 +52,29 @@ public class EventPublisher {
 
             EventEntity saved = eventRepository.save(event);
 
-            // Publicar a Kafka
-            kafkaTemplate.send(TOPIC_USER_EVENTS, objectMapper.writeValueAsString(
-                DomainEvent.builder()
-                    .eventId(saved.getId())
-                    .eventType("USER_CREATED")
-                    .aggregateId(user.getId())
-                    .aggregateType("USER")
-                    .payload(payload)
-                    .timestamp(saved.getCreatedAt())
-                    .build()
-            ));
+            // Publicar a Kafka (NO-BLOCKING - si falla, continúa)
+            try {
+                kafkaTemplate.send(TOPIC_USER_EVENTS, objectMapper.writeValueAsString(
+                    DomainEvent.builder()
+                        .eventId(saved.getId())
+                        .eventType("USER_CREATED")
+                        .aggregateId(user.getId())
+                        .aggregateType("USER")
+                        .payload(payload)
+                        .timestamp(saved.getCreatedAt())
+                        .build()
+                ));
 
-            // Marcar como publicado
-            saved.setPublished(true);
-            eventRepository.save(saved);
+                // Marcar como publicado solo si fue exitoso
+                saved.setPublished(true);
+                eventRepository.save(saved);
 
-            log.info("Event published: USER_CREATED for user ID: {}", user.getId());
+                log.info("Event published: USER_CREATED for user ID: {}", user.getId());
+            } catch (Exception kafkaEx) {
+                // Si Kafka falla, no es crítico - solo registramos como no publicado
+                log.warn("Failed to publish USER_CREATED event to Kafka for user ID: {}. Event saved in store.",
+                    user.getId());
+            }
         } catch (Exception e) {
             log.error("Error publishing USER_CREATED event", e);
             throw new RuntimeException("Failed to publish event", e);
@@ -82,6 +88,7 @@ public class EventPublisher {
         try {
             String payload = objectMapper.writeValueAsString(room);
 
+            // Guardar en Event Store (CRÍTICO)
             EventEntity event = EventEntity.builder()
                 .eventType("ROOM_CREATED")
                 .aggregateType("ROOM")
@@ -93,21 +100,28 @@ public class EventPublisher {
 
             EventEntity saved = eventRepository.save(event);
 
-            kafkaTemplate.send(TOPIC_ROOM_EVENTS, objectMapper.writeValueAsString(
-                DomainEvent.builder()
-                    .eventId(saved.getId())
-                    .eventType("ROOM_CREATED")
-                    .aggregateId(room.getId())
-                    .aggregateType("ROOM")
-                    .payload(payload)
-                    .timestamp(saved.getCreatedAt())
-                    .build()
-            ));
+            // Publicar a Kafka (NO-BLOCKING)
+            try {
+                kafkaTemplate.send(TOPIC_ROOM_EVENTS, objectMapper.writeValueAsString(
+                    DomainEvent.builder()
+                        .eventId(saved.getId())
+                        .eventType("ROOM_CREATED")
+                        .aggregateId(room.getId())
+                        .aggregateType("ROOM")
+                        .payload(payload)
+                        .timestamp(saved.getCreatedAt())
+                        .build()
+                ));
 
-            saved.setPublished(true);
-            eventRepository.save(saved);
+                saved.setPublished(true);
+                eventRepository.save(saved);
 
-            log.info("Event published: ROOM_CREATED for room ID: {}", room.getId());
+                log.info("Event published: ROOM_CREATED for room ID: {}", room.getId());
+            } catch (Exception kafkaEx) {
+                // Si Kafka falla, no es crítico
+                log.warn("Failed to publish ROOM_CREATED event to Kafka for room ID: {}. Event saved in store.",
+                    room.getId());
+            }
         } catch (Exception e) {
             log.error("Error publishing ROOM_CREATED event", e);
             throw new RuntimeException("Failed to publish event", e);

@@ -46,7 +46,7 @@ public class DataSourceConfig {
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         var props = em.getJpaPropertyMap();
-        props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+        props.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         props.put("hibernate.format_sql", true);
         props.put("hibernate.use_sql_comments", true);
 

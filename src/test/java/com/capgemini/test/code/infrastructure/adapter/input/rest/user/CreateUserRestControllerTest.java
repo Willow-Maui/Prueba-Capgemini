@@ -37,7 +37,7 @@ class CreateUserRestControllerTest {
     private CreateUserInputPort createUserUseCase;
 
     @Nested
-    @DisplayName("POST /api/v1/users")
+    @DisplayName("POST /users")
     class CreateUserEndpoint {
 
         @Test
@@ -61,7 +61,7 @@ class CreateUserRestControllerTest {
             when(createUserUseCase.execute(any(UserDTO.class))).thenReturn(responseDto);
 
             // Act & Assert
-            mockMvc.perform(post("/api/v1/users")
+            mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isCreated())
@@ -84,7 +84,7 @@ class CreateUserRestControllerTest {
                     .thenThrow(new InvalidDniException("DNI no válido"));
 
             // Act & Assert
-            mockMvc.perform(post("/api/v1/users")
+            mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isConflict())
@@ -113,7 +113,7 @@ class CreateUserRestControllerTest {
             when(createUserUseCase.execute(any(UserDTO.class))).thenReturn(responseDto);
 
             // Act & Assert
-            mockMvc.perform(post("/api/v1/users")
+            mockMvc.perform(post("/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isCreated())

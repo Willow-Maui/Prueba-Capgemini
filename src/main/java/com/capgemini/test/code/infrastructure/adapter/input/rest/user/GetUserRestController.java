@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
  * (Manejadas por GlobalExceptionHandler)
  */
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class GetUserRestController {
 

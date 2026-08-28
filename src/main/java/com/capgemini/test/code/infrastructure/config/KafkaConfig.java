@@ -26,7 +26,7 @@ import java.util.Map;
  * 3. Configurar productores y consumidores
  * 4. Manejo de retry y dead letter queue
  */
-@Configuration
+/* @Configuration
 @EnableKafka
 public class KafkaConfig {
 
@@ -114,4 +114,5 @@ public class KafkaConfig {
         return new KafkaAdmin(adminConfigs);
     }
 }
+*/
 

@@ -32,7 +32,7 @@ class GetUserRestControllerTest {
     private GetUserInputPort getUserUseCase;
 
     @Nested
-    @DisplayName("GET /api/v1/users/{id}")
+    @DisplayName("GET /users/{id}")
     class GetUserEndpoint {
 
         @Test
@@ -52,7 +52,7 @@ class GetUserRestControllerTest {
             when(getUserUseCase.execute(1L)).thenReturn(userDto);
 
             // Act & Assert
-            mockMvc.perform(get("/api/v1/users/1"))
+            mockMvc.perform(get("/users/1"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(1L))
                     .andExpect(jsonPath("$.name").value("pablo"))
@@ -69,7 +69,7 @@ class GetUserRestControllerTest {
                     .thenThrow(new UserNotFoundException(999L));
 
             // Act & Assert
-            mockMvc.perform(get("/api/v1/users/999"))
+            mockMvc.perform(get("/users/999"))
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.code").value(404))
                     .andExpect(jsonPath("$.message").exists());
@@ -92,7 +92,7 @@ class GetUserRestControllerTest {
             when(getUserUseCase.execute(42L)).thenReturn(userDto);
 
             // Act & Assert
-            mockMvc.perform(get("/api/v1/users/42"))
+            mockMvc.perform(get("/users/42"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.id").value(42L))
                     .andExpect(jsonPath("$.name").value("juan"))
@@ -119,7 +119,7 @@ class GetUserRestControllerTest {
             when(getUserUseCase.execute(1L)).thenReturn(userDto);
 
             // Act & Assert
-            mockMvc.perform(get("/api/v1/users/1"))
+            mockMvc.perform(get("/users/1"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.phone").isEmpty());
         }

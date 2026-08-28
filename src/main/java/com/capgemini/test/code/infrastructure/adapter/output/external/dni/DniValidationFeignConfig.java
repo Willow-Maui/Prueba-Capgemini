@@ -4,6 +4,7 @@ import feign.Retryer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 /**
  * DniValidationFeignConfig - Configuración de Feign para DNI Validation
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class DniValidationFeignConfig {
 
     @Bean(name = "dniRetryer")
+    @Primary
     public Retryer retryer() {
         // Retry: initial interval 100ms, max interval 1000ms, 3 attempts
         return new Retryer.Default(100, 1000, 3);

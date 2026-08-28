@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import feign.Logger;
 import feign.okhttp.OkHttpClient;
  
-@FeignClient(name = "checkDniClient", url = "${external.service.url}", configuration = DniClient.FeignConfig.class)
+@FeignClient(name = "checkDniClient", url = "${external.dni-validation.url}", configuration = DniClient.FeignConfig.class)
 public interface DniClient {
   @Configuration
   public class FeignConfig {

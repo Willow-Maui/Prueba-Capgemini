@@ -13,7 +13,6 @@ import com.capgemini.test.code.infrastructure.adapter.output.external.notificati
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,13 +35,7 @@ import org.springframework.context.annotation.Configuration;
  * - Use Cases (CreateUserUseCase, GetUserUseCase) → Orquestación
  */
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-
-    private final UserPersistenceAdapter userPersistenceAdapter;
-    private final RoomPersistenceAdapter roomPersistenceAdapter;
-    private final DniValidationAdapter dniValidationAdapter;
-    private final NotificationAdapter notificationAdapter;
 
     // ==================== PORTS ====================
     // Exponen adaptadores como puertos
@@ -53,7 +46,7 @@ public class ApplicationConfig {
      * @return UserRepository interface, implementada por UserPersistenceAdapter
      */
     @Bean
-    public UserRepository userRepository() {
+    public UserRepository userRepository(UserPersistenceAdapter userPersistenceAdapter) {
         return userPersistenceAdapter;
     }
 
@@ -63,7 +56,7 @@ public class ApplicationConfig {
      * @return RoomRepository interface, implementada por RoomPersistenceAdapter
      */
     @Bean
-    public RoomRepository roomRepository() {
+    public RoomRepository roomRepository(RoomPersistenceAdapter roomPersistenceAdapter) {
         return roomPersistenceAdapter;
     }
 
@@ -73,7 +66,7 @@ public class ApplicationConfig {
      * @return DniValidationPort interface, implementada por DniValidationAdapter
      */
     @Bean
-    public DniValidationPort dniValidationPort() {
+    public DniValidationPort dniValidationPort(DniValidationAdapter dniValidationAdapter) {
         return dniValidationAdapter;
     }
 
@@ -83,7 +76,7 @@ public class ApplicationConfig {
      * @return NotificationPort interface, implementada por NotificationAdapter
      */
     @Bean
-    public NotificationPort notificationPort() {
+    public NotificationPort notificationPort(NotificationAdapter notificationAdapter) {
         return notificationAdapter;
     }
 
@@ -102,11 +95,13 @@ public class ApplicationConfig {
      * @return CreateUserUseCase bean
      */
     @Bean
-    public CreateUserUseCase createUserUseCase() {
+    public CreateUserUseCase createUserUseCase(UserRepository userRepository,
+                                               DniValidationPort dniValidationPort,
+                                               NotificationPort notificationPort) {
         return new CreateUserUseCase(
-            userRepository(),
-            dniValidationPort(),
-            notificationPort()
+            userRepository,
+            dniValidationPort,
+            notificationPort
         );
     }
 
@@ -119,8 +114,8 @@ public class ApplicationConfig {
      * @return GetUserUseCase bean
      */
     @Bean
-    public GetUserUseCase getUserUseCase() {
-        return new GetUserUseCase(userRepository());
+    public GetUserUseCase getUserUseCase(UserRepository userRepository) {
+        return new GetUserUseCase(userRepository);
     }
 
     // ==================== UTILITIES ====================
