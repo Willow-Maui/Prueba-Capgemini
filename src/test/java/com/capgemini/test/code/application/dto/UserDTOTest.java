@@ -28,7 +28,7 @@ class UserDTOTest {
           .email("pablo@example.com")
           .phone("677998899")
           .dni("23454234W")
-          .rol("admin")
+          .role("admin")
           .roomId(1L)
           .build();
 
@@ -70,7 +70,7 @@ class UserDTOTest {
       dto.setEmail("pablo@example.com");
       dto.setPhone("677998899");
       dto.setDni("23454234W");
-      dto.setRol("admin");
+      dto.setRole("admin");
       dto.setRoomId(1L);
 
       // Assert
@@ -79,7 +79,7 @@ class UserDTOTest {
       assertThat(dto.getEmail()).isEqualTo("pablo@example.com");
       assertThat(dto.getPhone()).isEqualTo("677998899");
       assertThat(dto.getDni()).isEqualTo("23454234W");
-      assertThat(dto.getRol()).isEqualTo("admin");
+      assertThat(dto.getRole()).isEqualTo("admin");
       assertThat(dto.getRoomId()).isEqualTo(1L);
     }
   }
@@ -96,14 +96,14 @@ class UserDTOTest {
           .id(1L)
           .name("pablo")
           .email("pablo@example.com")
-          .rol("admin")
+          .role("admin")
           .build();
 
       UserDTO dto2 = UserDTO.builder()
           .id(1L)
           .name("pablo")
           .email("pablo@example.com")
-          .rol("admin")
+          .role("admin")
           .build();
 
       // Assert
@@ -142,7 +142,7 @@ class UserDTOTest {
           .name("pablo")
           .email("pablo@example.com")
           .phone(null)
-          .rol("admin")
+          .role("admin")
           .build();
 
       // Assert
@@ -185,7 +185,7 @@ class UserDTOTest {
           .name(expectedName)
           .email(expectedEmail)
           .dni(expectedDni)
-          .rol(expectedRol)
+          .role(expectedRol)
           .build();
 
       // Assert
@@ -193,7 +193,7 @@ class UserDTOTest {
       assertThat(dto.getName()).isEqualTo(expectedName);
       assertThat(dto.getEmail()).isEqualTo(expectedEmail);
       assertThat(dto.getDni()).isEqualTo(expectedDni);
-      assertThat(dto.getRol()).isEqualTo(expectedRol);
+      assertThat(dto.getRole()).isEqualTo(expectedRol);
     }
   }
 }

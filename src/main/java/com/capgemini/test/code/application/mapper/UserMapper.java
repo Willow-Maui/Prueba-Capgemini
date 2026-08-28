@@ -35,7 +35,7 @@ public class UserMapper {
         .email(user.getEmail())
         .phone(user.getPhone())
         .dni(user.getDni())
-        .rol(user.getRole().name())
+        .role(user.getRole().name())
         .roomId(user.getRoomId())
         .build();
   }

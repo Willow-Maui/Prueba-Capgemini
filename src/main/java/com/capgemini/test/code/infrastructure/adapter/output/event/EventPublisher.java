@@ -1,7 +1,7 @@
 package com.capgemini.test.code.infrastructure.adapter.output.event;
 
+import com.capgemini.test.code.application.dto.UserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.capgemini.test.code.domain.user.model.User;
 import com.capgemini.test.code.domain.room.model.Room;
 import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.event.EventEntity;
 import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.event.EventJpaRepository;
@@ -36,11 +36,11 @@ public class EventPublisher {
      * Publica evento de creación de usuario
      * Guarda en Event Store y envía a Kafka
      */
-    public void publishUserCreated(User user) {
+    public void publishUserCreated(UserDTO user) {
         try {
             String payload = objectMapper.writeValueAsString(user);
 
-            // Guardar en Event Store (CRÍTICO - debe funcionar siempre)
+            // Guardar en Event Store
             EventEntity event = EventEntity.builder()
                 .eventType("USER_CREATED")
                 .aggregateType("USER")
@@ -88,7 +88,6 @@ public class EventPublisher {
         try {
             String payload = objectMapper.writeValueAsString(room);
 
-            // Guardar en Event Store (CRÍTICO)
             EventEntity event = EventEntity.builder()
                 .eventType("ROOM_CREATED")
                 .aggregateType("ROOM")

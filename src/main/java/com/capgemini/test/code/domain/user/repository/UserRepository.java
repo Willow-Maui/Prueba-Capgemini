@@ -1,5 +1,6 @@
 package com.capgemini.test.code.domain.user.repository;
 
+import com.capgemini.test.code.application.dto.UserDTO;
 import com.capgemini.test.code.domain.user.model.User;
 
 /**
@@ -15,14 +16,14 @@ public interface UserRepository {
    * @param id el ID del usuario
    * @return el usuario si existe
    */
-  User findById(Long id);
+  UserDTO findById(Long id);
 
   /**
    * Busca un usuario por su email.
    * @param email el email del usuario
    * @return el usuario si existe
    */
-  User findByEmail(String email);
+  UserDTO findByEmail(String email);
 
   /**
    * Verifica si un email ya existe en el sistema.
@@ -45,7 +46,7 @@ public interface UserRepository {
    * @param user el usuario a guardar (sin ID)
    * @return el usuario guardado (con ID asignado por la BD)
    */
-  User save(User user);
+  UserDTO save(UserDTO user);
 
   /**
    * Obtiene un usuario por su ID dentro de una sala específica.
@@ -53,6 +54,6 @@ public interface UserRepository {
    * @param roomId el ID de la sala
    * @return el usuario si existe en la sala
    */
-  User findByIdAndRoomId(Long userId, Long roomId);
+  UserDTO findByIdAndRoomId(Long userId, Long roomId);
 }
 

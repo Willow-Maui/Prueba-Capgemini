@@ -17,5 +17,9 @@ public interface UserReadJpaRepository extends JpaRepository<UserReadEntity, Lon
     List<UserReadEntity> findByRoomId(Long roomId);
 
     Optional<UserReadEntity> findByIdAndRoomId(Long id, Long roomId);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByDni(String dni);
 }
 

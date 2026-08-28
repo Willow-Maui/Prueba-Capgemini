@@ -39,7 +39,7 @@ class UserRestMapperTest {
             assertThat(result.getEmail()).isEqualTo("pablo@example.com");
             assertThat(result.getDni()).isEqualTo("23454234W");
             assertThat(result.getPhone()).isEqualTo("677998899");
-            assertThat(result.getRol()).isEqualTo("admin");
+            assertThat(result.getRole()).isEqualTo("admin");
             assertThat(result.getId()).isNull();
             assertThat(result.getRoomId()).isNull();
         }
@@ -100,7 +100,7 @@ class UserRestMapperTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone("677998899")
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -123,7 +123,7 @@ class UserRestMapperTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone("677998899")
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -155,7 +155,7 @@ class UserRestMapperTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone("677998899")
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -180,7 +180,7 @@ class UserRestMapperTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone(null)
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -207,7 +207,7 @@ class UserRestMapperTest {
                     .email("juan@example.com")
                     .dni("12345678A")
                     .phone("666777888")
-                    .rol("SUPERADMIN")
+                    .role("SUPERADMIN")
                     .roomId(2L)
                     .build();
 

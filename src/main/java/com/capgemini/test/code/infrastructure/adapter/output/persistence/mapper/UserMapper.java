@@ -33,6 +33,23 @@ public interface UserMapper {
             .build();
     }
 
+    // DTO → Entity (WriteDB)
+    default UserEntity toEntity(UserDTO user) {
+        if (user == null) {
+            return null;
+        }
+
+        return UserEntity.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .dni(user.getDni())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .roomId(user.getRoomId())
+                .build();
+    }
+
     // Entity (WriteDB) → Domain
     default User toDomain(UserEntity entity) {
         if (entity == null) {
@@ -77,10 +94,11 @@ public interface UserMapper {
             .email(user.getEmail())
             .dni(user.getDni())
             .phone(user.getPhone())
-            .rol(user.getRole().name())
+            .role(user.getRole().name())
             .roomId(user.getRoomId())
             .build();
     }
+
 
     // Entity (ReadDB) → DTO
     default UserDTO readToDTO(UserReadEntity entity) {
@@ -94,7 +112,7 @@ public interface UserMapper {
             .email(entity.getEmail())
             .dni(entity.getDni())
             .phone(entity.getPhone())
-            .rol(entity.getRole())
+            .role(entity.getRole())
             .roomId(entity.getRoomId())
             .build();
     }
@@ -116,6 +134,23 @@ public interface UserMapper {
             .createdAt(entity.getCreatedAt())
             .build();
     }
+
+    default UserDTO writeToDomain(UserEntity entity){
+        if (entity == null) {
+            return null;
+        }
+
+        return UserDTO.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .dni(entity.getDni())
+                .phone(entity.getPhone())
+                .role(entity.getRole())
+                .roomId(entity.getRoomId())
+                .build();
+    }
+    
 }
 
 

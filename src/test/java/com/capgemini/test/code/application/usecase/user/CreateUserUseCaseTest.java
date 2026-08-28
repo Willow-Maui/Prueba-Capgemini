@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -64,30 +63,31 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
-      User savedUser = User.builder()
+      UserDTO savedUser = UserDTO.builder()
+          .id(42L)
           .name("pablo")
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .role("admin")
+          .role("ADMIN")
           .roomId(1L)
-          .buildWithId(42L);
+          .build();
 
       doNothing().when(dniValidationPort).validate("23454234W");
       when(userRepository.existsByEmail("pablo@example.com")).thenReturn(false);
-      when(userRepository.save(any(User.class))).thenReturn(savedUser);
+      when(userRepository.save(any(UserDTO.class))).thenReturn(savedUser);
 
       UserDTO result = useCase.execute(requestDTO);
 
       assertThat(result).isNotNull();
       assertThat(result.getId()).isEqualTo(42L);
       assertThat(result.getName()).isEqualTo("pablo");
-      assertThat(result.getRol()).isEqualTo("ADMIN");
-      verify(userRepository).save(any(User.class));
-      verify(notificationPort).notifyUserCreated(any(User.class));
+      assertThat(result.getRole()).isEqualToIgnoringCase("ADMIN");
+      verify(userRepository).save(any(UserDTO.class));
+      verify(notificationPort).notifyUserCreated(any(UserDTO.class));
     }
 
     @Test
@@ -98,27 +98,28 @@ class CreateUserUseCaseTest {
           .email("juan@example.com")
           .dni("12345678A")
           .phone("677998899")
-          .rol("superadmin")
+          .role("SUPERADMIN")
           .build();
 
-      User savedUser = User.builder()
+      UserDTO savedUser = UserDTO.builder()
+          .id(43L)
           .name("juan")
           .email("juan@example.com")
           .dni("12345678A")
           .phone("677998899")
-          .role("superadmin")
+          .role("SUPERADMIN")
           .roomId(1L)
-          .buildWithId(43L);
+          .build();
 
       doNothing().when(dniValidationPort).validate("12345678A");
       when(userRepository.existsByEmail("juan@example.com")).thenReturn(false);
-      when(userRepository.save(any(User.class))).thenReturn(savedUser);
+      when(userRepository.save(any(UserDTO.class))).thenReturn(savedUser);
 
       UserDTO result = useCase.execute(requestDTO);
 
       assertThat(result.getId()).isEqualTo(43L);
-      assertThat(result.getRol()).isEqualTo("SUPERADMIN");
-      verify(notificationPort).notifyUserCreated(any(User.class));
+      assertThat(result.getRole()).isEqualToIgnoringCase("SUPERADMIN");
+      verify(notificationPort).notifyUserCreated(any(UserDTO.class));
     }
   }
 
@@ -134,7 +135,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       assertThatThrownBy(() -> useCase.execute(requestDTO))
@@ -150,7 +151,7 @@ class CreateUserUseCaseTest {
           .email("pabloemail.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       assertThatThrownBy(() -> useCase.execute(requestDTO))
@@ -166,7 +167,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("user")
+          .role("user")
           .build();
 
       assertThatThrownBy(() -> useCase.execute(requestDTO))
@@ -182,7 +183,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("superadmin")
+          .role("SUPERADMIN")
           .build();
 
       assertThatThrownBy(() -> useCase.execute(requestDTO))
@@ -203,20 +204,21 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       doNothing().when(dniValidationPort).validate("23454234W");
       when(userRepository.existsByEmail("pablo@example.com")).thenReturn(false);
-      when(userRepository.save(any(User.class))).thenReturn(
-          User.builder()
+      when(userRepository.save(any(UserDTO.class))).thenReturn(
+          UserDTO.builder()
+              .id(1L)
               .name("pablo")
               .email("pablo@example.com")
               .dni("23454234W")
               .phone(null)
-              .role("admin")
+              .role("ADMIN")
               .roomId(1L)
-              .buildWithId(1L)
+              .build()
       );
 
       useCase.execute(requestDTO);
@@ -232,7 +234,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("99999999W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       doThrow(new InvalidDniException("DNI inválido")).when(dniValidationPort).validate("99999999W");
@@ -258,7 +260,7 @@ class CreateUserUseCaseTest {
           .email("duplicate@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       doNothing().when(dniValidationPort).validate("23454234W");
@@ -285,7 +287,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       assertThatThrownBy(() -> useCase.execute(requestDTO))
@@ -302,7 +304,7 @@ class CreateUserUseCaseTest {
           .email("pablo@example.com")
           .dni("99999999W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       doThrow(new InvalidDniException("DNI inválido")).when(dniValidationPort).validate("99999999W");
@@ -321,7 +323,7 @@ class CreateUserUseCaseTest {
           .email("duplicate@example.com")
           .dni("23454234W")
           .phone(null)
-          .rol("admin")
+          .role("ADMIN")
           .build();
 
       doNothing().when(dniValidationPort).validate("23454234W");

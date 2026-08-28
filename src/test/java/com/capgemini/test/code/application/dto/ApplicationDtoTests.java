@@ -26,7 +26,7 @@ class ApplicationDtoTests {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone("677998899")
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -35,7 +35,7 @@ class ApplicationDtoTests {
             assertThat(userDto.getEmail()).isEqualTo("pablo@example.com");
             assertThat(userDto.getDni()).isEqualTo("23454234W");
             assertThat(userDto.getPhone()).isEqualTo("677998899");
-            assertThat(userDto.getRol()).isEqualTo("ADMIN");
+            assertThat(userDto.getRole()).isEqualTo("ADMIN");
             assertThat(userDto.getRoomId()).isEqualTo(1L);
         }
 
@@ -59,7 +59,7 @@ class ApplicationDtoTests {
             assertThat(userDto.getEmail()).isEqualTo("juan@example.com");
             assertThat(userDto.getPhone()).isEqualTo("677998899");
             assertThat(userDto.getDni()).isEqualTo("12345678A");
-            assertThat(userDto.getRol()).isEqualTo("SUPERADMIN");
+            assertThat(userDto.getRole()).isEqualTo("SUPERADMIN");
             assertThat(userDto.getRoomId()).isEqualTo(2L);
         }
 
@@ -72,7 +72,7 @@ class ApplicationDtoTests {
             userDto.setEmail("maria@example.com");
             userDto.setDni("87654321B");
             userDto.setPhone("666777888");
-            userDto.setRol("ADMIN");
+            userDto.setRole("ADMIN");
             userDto.setRoomId(3L);
 
             assertThat(userDto.getId()).isEqualTo(99L);
@@ -80,7 +80,7 @@ class ApplicationDtoTests {
             assertThat(userDto.getEmail()).isEqualTo("maria@example.com");
             assertThat(userDto.getDni()).isEqualTo("87654321B");
             assertThat(userDto.getPhone()).isEqualTo("666777888");
-            assertThat(userDto.getRol()).isEqualTo("ADMIN");
+            assertThat(userDto.getRole()).isEqualTo("ADMIN");
             assertThat(userDto.getRoomId()).isEqualTo(3L);
         }
 
@@ -92,7 +92,7 @@ class ApplicationDtoTests {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone(null)
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .build();
 
             assertThat(userDto.getId()).isNull();
@@ -114,7 +114,7 @@ class ApplicationDtoTests {
             assertThat(userDto.getId()).isNull();
             assertThat(userDto.getDni()).isNull();
             assertThat(userDto.getPhone()).isNull();
-            assertThat(userDto.getRol()).isNull();
+            assertThat(userDto.getRole()).isNull();
             assertThat(userDto.getRoomId()).isNull();
         }
     }

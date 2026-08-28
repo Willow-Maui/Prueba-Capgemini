@@ -38,7 +38,7 @@ public class UserDTO {
   private String dni;
 
   /** Rol del usuario (ADMIN o SUPERADMIN) */
-  private String rol;
+  private String role;
 
   /** ID de la sala a la que pertenece */
   private Long roomId;

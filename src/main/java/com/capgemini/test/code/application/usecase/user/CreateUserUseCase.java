@@ -1,6 +1,7 @@
 package com.capgemini.test.code.application.usecase.user;
 
 import com.capgemini.test.code.application.dto.UserDTO;
+import com.capgemini.test.code.application.mapper.UserMapper;
 import com.capgemini.test.code.application.ports.input.CreateUserInputPort;
 import com.capgemini.test.code.application.ports.output.DniValidationPort;
 import com.capgemini.test.code.application.ports.output.NotificationPort;
@@ -89,7 +90,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
         .email(userDTO.getEmail())
         .dni(userDTO.getDni())
         .phone(userDTO.getPhone())
-        .role(userDTO.getRol())
+        .role(userDTO.getRole())
         .roomId(1L)  // Se asume que sala 1 siempre existe
         .build();
 
@@ -102,7 +103,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
     }
 
     // PASO 4: Guardar usuario en BD (asigna ID)
-    User savedUser = userRepository.save(user);
+    UserDTO savedUser = userRepository.save(UserMapper.toDTO(user));
 
     // PASO 5: Notificar creación (best-effort, si falla, sube excepción)
     notificationPort.notifyUserCreated(savedUser);
@@ -114,7 +115,7 @@ public class CreateUserUseCase implements CreateUserInputPort {
         .email(savedUser.getEmail())
         .phone(savedUser.getPhone())
         .dni(savedUser.getDni())
-        .rol(savedUser.getRole().toString())
+        .role(savedUser.getRole().toString())
         .roomId(savedUser.getRoomId())
         .build();
   }

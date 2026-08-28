@@ -1,5 +1,6 @@
 package com.capgemini.test.code.infrastructure.adapter.output.external.notification;
 
+import com.capgemini.test.code.application.dto.UserDTO;
 import com.capgemini.test.code.application.ports.output.NotificationPort;
 import com.capgemini.test.code.domain.user.model.User;
 import com.capgemini.test.code.domain.user.model.UserRole;
@@ -38,10 +39,10 @@ public class NotificationAdapter implements NotificationPort {
      * Lanza excepción si el envío falla después de reintentos
      */
     @Override
-    public void notifyUserCreated(User user) {
+    public void notifyUserCreated(UserDTO user) {
         try {
             log.debug("Notifying user creation: {} ({})",
-                user.getEmail(), user.getRole().name());
+                user.getEmail(), user.getRole());
 
             if (UserRole.ADMIN.equals(user.getRole())) {
                 notifyByEmail(user);
@@ -63,7 +64,7 @@ public class NotificationAdapter implements NotificationPort {
         }
     }
 
-    private void notifyByEmail(User user) {
+    private void notifyByEmail(UserDTO user) {
         log.debug("Sending email notification to: {}", user.getEmail());
 
         EmailNotificationRequest request = EmailNotificationRequest.builder()
@@ -74,7 +75,7 @@ public class NotificationAdapter implements NotificationPort {
         client.sendEmail(request);
     }
 
-    private void notifySms(User user) {
+    private void notifySms(UserDTO user) {
         log.debug("Sending SMS notification to: {}", user.getPhone());
 
         SmsNotificationRequest request = SmsNotificationRequest.builder()

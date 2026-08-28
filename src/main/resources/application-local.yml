@@ -43,6 +43,8 @@ spring:
 
   # ==================== Kafka Configuration - EMBEDIDO ====================
   kafka:
+    embedded:
+      enabled: true
     bootstrap-servers: localhost:19092
     enabled: true
     producer:
@@ -57,8 +59,6 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
       max-poll-records: 100
-    embedded:
-      enabled: true
 
 # ==================== Logging ====================
 logging:

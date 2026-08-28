@@ -1,6 +1,7 @@
 package com.capgemini.test.code.application.ports.output;
 
-import com.capgemini.test.code.domain.user.model.User;
+import com.capgemini.test.code.application.dto.UserDTO;
+
 
 /**
  * Puerto de salida (interfaz) para notificaciones de Usuario.
@@ -24,6 +25,6 @@ public interface NotificationPort {
    * @throws Exception si el envío de notificación falla
    *                   (NOTA: según requisitos, esto causa ROLLBACK de la transacción)
    */
-  void notifyUserCreated(User user);
+  void notifyUserCreated(UserDTO user);
 }
 

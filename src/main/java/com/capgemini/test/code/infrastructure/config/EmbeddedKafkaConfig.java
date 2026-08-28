@@ -1,5 +1,6 @@
 package com.capgemini.test.code.infrastructure.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -13,10 +14,10 @@ import java.util.Map;
 /**
  * EmbeddedKafkaConfig - Configuración de Kafka embebido
  *
- * Se activa solo cuando se ejecuta con el perfil "embedded-kafka"
+ * Se activa solo cuando se ejecuta con el perfil "local"
  * Proporciona un broker Kafka dentro del proceso de la aplicación
  *
- * Uso: mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=embedded-kafka"
+ * Uso: mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=local"
  */
 @Configuration
 @ConditionalOnProperty(name = "kafka.embedded.enabled", havingValue = "true")
@@ -41,10 +42,17 @@ public class EmbeddedKafkaConfig {
 
         kafkaBroker.brokerProperties(props);
 
+        kafkaBroker.kafkaPorts(19092);
+
         kafkaBroker.afterPropertiesSet();
 
         log.info("✅ Kafka embebido iniciado en puerto: {}", kafkaBroker.getBrokersAsString());
         return kafkaBroker;
+    }
+
+    @PostConstruct
+    public void init() {
+        log.info("EMBEDDED KAFKA CONFIG CARGADA");
     }
 }
 

@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,7 +44,7 @@ class GetUserRestControllerTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone(null)
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -85,7 +84,7 @@ class GetUserRestControllerTest {
                     .email("juan@example.com")
                     .dni("12345678A")
                     .phone("677998899")
-                    .rol("SUPERADMIN")
+                    .role("SUPERADMIN")
                     .roomId(2L)
                     .build();
 
@@ -112,7 +111,7 @@ class GetUserRestControllerTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone(null)
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 

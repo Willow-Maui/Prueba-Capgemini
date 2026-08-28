@@ -6,7 +6,9 @@ import com.capgemini.test.code.domain.user.repository.UserRepository;
 import com.capgemini.test.code.domain.room.repository.RoomRepository;
 import com.capgemini.test.code.application.ports.output.DniValidationPort;
 import com.capgemini.test.code.application.ports.output.NotificationPort;
-import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.user.UserPersistenceAdapter;
+import com.capgemini.test.code.infrastructure.adapter.output.persistence.commondb.user.UserPersistenceAdapter;
+import com.capgemini.test.code.infrastructure.adapter.output.persistence.readdb.user.UserReadJpaRepository;
+import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.user.UserWriteAdapter;
 import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.room.RoomPersistenceAdapter;
 import com.capgemini.test.code.infrastructure.adapter.output.external.dni.DniValidationAdapter;
 import com.capgemini.test.code.infrastructure.adapter.output.external.notification.NotificationAdapter;
@@ -114,7 +116,7 @@ public class ApplicationConfig {
      * @return GetUserUseCase bean
      */
     @Bean
-    public GetUserUseCase getUserUseCase(UserRepository userRepository) {
+    public GetUserUseCase getUserUseCase(UserPersistenceAdapter userRepository) {
         return new GetUserUseCase(userRepository);
     }
 

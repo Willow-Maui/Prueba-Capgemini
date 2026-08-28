@@ -54,7 +54,7 @@ class CreateUserRestControllerTest {
                     .email("pablo@example.com")
                     .dni("23454234W")
                     .phone(null)
-                    .rol("ADMIN")
+                    .role("ADMIN")
                     .roomId(1L)
                     .build();
 
@@ -106,7 +106,7 @@ class CreateUserRestControllerTest {
                     .email("juan@example.com")
                     .dni("12345678A")
                     .phone("677998899")
-                    .rol("SUPERADMIN")
+                    .role("SUPERADMIN")
                     .roomId(1L)
                     .build();
 

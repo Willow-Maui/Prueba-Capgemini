@@ -36,7 +36,7 @@ public class UserRestMapper {
         .email(restRequest.getEmail())
         .phone(restRequest.getPhone())
         .dni(restRequest.getDni())
-        .rol(restRequest.getRol())
+        .role(restRequest.getRol())
         .build();
   }
 
@@ -55,7 +55,7 @@ public class UserRestMapper {
          .id(applicationDTO.getId())
          .name(applicationDTO.getName())
          .email(applicationDTO.getEmail())
-         .rol(applicationDTO.getRol())
+         .rol(applicationDTO.getRole())
          .roomId(applicationDTO.getRoomId())
          .build();
    }
@@ -77,9 +77,10 @@ public class UserRestMapper {
          .email(applicationDTO.getEmail())
          .phone(applicationDTO.getPhone())
          .dni(applicationDTO.getDni())
-         .rol(applicationDTO.getRol())
+         .rol(applicationDTO.getRole())
          .roomId(applicationDTO.getRoomId())
          .build();
    }
+
 }
 

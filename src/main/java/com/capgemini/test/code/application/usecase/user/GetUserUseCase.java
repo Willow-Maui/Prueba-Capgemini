@@ -56,17 +56,13 @@ public class GetUserUseCase implements GetUserInputPort {
   public UserDTO execute(Long userId) {
 
     // PASO 1: Buscar usuario por ID
-    User user = userRepository.findById(userId);
+    UserDTO user = userRepository.findById(userId);
 
     // PASO 2: Validar que existe
     if (user == null) {
       throw new UserNotFoundException(userId);
     }
-
-    // PASO 3: Mapear a DTO
-    UserDTO dto = UserMapper.toDTO(user);
-
-    // PASO 4: Retornar
-    return dto;
+    // PASO 3: Retornar
+    return user;
   }
 }

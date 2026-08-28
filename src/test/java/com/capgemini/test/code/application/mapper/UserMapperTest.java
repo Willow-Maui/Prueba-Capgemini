@@ -43,7 +43,7 @@ class UserMapperTest {
       assertThat(result.getEmail()).isEqualTo("pablo@example.com");
       assertThat(result.getDni()).isEqualTo("23454234W");
       assertThat(result.getPhone()).isNull();
-      assertThat(result.getRol()).isEqualTo("ADMIN");
+      assertThat(result.getRole()).isEqualTo("ADMIN");
       assertThat(result.getRoomId()).isEqualTo(1L);
     }
 
@@ -70,7 +70,7 @@ class UserMapperTest {
       assertThat(result.getEmail()).isEqualTo("juan@example.com");
       assertThat(result.getDni()).isEqualTo("12345678A");
       assertThat(result.getPhone()).isEqualTo("677998899");
-      assertThat(result.getRol()).isEqualTo("SUPERADMIN");
+      assertThat(result.getRole()).isEqualTo("SUPERADMIN");
       assertThat(result.getRoomId()).isEqualTo(1L);
     }
 
@@ -78,7 +78,7 @@ class UserMapperTest {
     @DisplayName("Debe retornar null cuando User es null")
     void shouldReturnNullWhenUserIsNull() {
       // Act
-      UserDTO result = UserMapper.toDTO(null);
+      UserDTO result = UserMapper.toDTO((User)null);
 
       // Assert
       assertThat(result).isNull();
@@ -108,7 +108,7 @@ class UserMapperTest {
             assertThat(dto.getEmail()).isEqualTo("maria@test.com");
             assertThat(dto.getDni()).isEqualTo("99887766Z");
             assertThat(dto.getPhone()).isEqualTo("612345678");
-            assertThat(dto.getRol()).isEqualTo("ADMIN");
+            assertThat(dto.getRole()).isEqualTo("ADMIN");
             assertThat(dto.getRoomId()).isEqualTo(5L);
           });
     }
@@ -250,7 +250,7 @@ class UserMapperTest {
       UserDTO result = UserMapper.toDTO(user);
 
       // Assert
-      assertThat(result.getRol()).isEqualTo("ADMIN");
+      assertThat(result.getRole()).isEqualTo("ADMIN");
     }
 
     @Test
@@ -270,7 +270,7 @@ class UserMapperTest {
       UserDTO result = UserMapper.toDTO(user);
 
       // Assert
-      assertThat(result.getRol()).isEqualTo("SUPERADMIN");
+      assertThat(result.getRole()).isEqualTo("SUPERADMIN");
     }
 
     @Test
