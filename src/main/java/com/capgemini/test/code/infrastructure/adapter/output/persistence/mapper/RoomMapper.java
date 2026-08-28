@@ -54,7 +54,6 @@ public interface RoomMapper {
         return RoomReadEntity.builder()
             .id(entity.getId())
             .name(entity.getName())
-            .description(entity.getDescription())
             .createdAt(entity.getCreatedAt())
             .build();
     }

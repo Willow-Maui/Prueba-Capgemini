@@ -2,8 +2,6 @@ package com.capgemini.test.code.infrastructure.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -19,27 +17,25 @@ import javax.sql.DataSource;
  * ReadDB (MySQL) no necesita Flyway - se sincroniza desde WriteDB.
  */
 @Configuration
-public class FlywayConfig {
+public class ReadDbFlywayConfig {
 
-    private final DataSource writedbDataSource;
+    private final DataSource readdbDataSource;
 
-    public FlywayConfig(
-            @Qualifier("writedbDataSource")
-            DataSource writedbDataSource) {
-        this.writedbDataSource = writedbDataSource;
+    public ReadDbFlywayConfig(
+            @Qualifier("readdbDataSource")
+            DataSource readdbDataSource) {
+        this.readdbDataSource = readdbDataSource;
     }
 
     @EventListener
     public void onContextRefreshed(ContextRefreshedEvent event) {
 
         Flyway flyway = Flyway.configure()
-                .dataSource(writedbDataSource)
-                .locations("classpath:db/migration/writedb")
+                .dataSource(readdbDataSource)
+                .locations("classpath:db/migration/readdb")
                 .baselineOnMigrate(true)
                 .load();
 
         flyway.migrate();
     }
 }
-
-
