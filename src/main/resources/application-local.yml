@@ -5,7 +5,7 @@ spring:
   # ==================== WriteDB (PostgreSQL) - Base de datos de escritura ====================
   datasource:
     writedb:
-      url: jdbc:postgresql://localhost:5432/users
+      jdbc-url: jdbc:postgresql://localhost:5432/users
       username: user
       password: password
       driver-class-name: org.postgresql.Driver
@@ -17,9 +17,9 @@ spring:
 
     # ==================== ReadDB (MySQL) - Réplica de lectura ====================
     readdb:
-      url: jdbc:mysql://localhost:3306/capgemini_readdb
-      username: root
-      password: root
+      jdbc-url: jdbc:mysql://localhost:3306/capgemini_readdb
+      username: user
+      password: password
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 10
@@ -41,10 +41,10 @@ spring:
   flyway:
     enabled: false
 
-  # ==================== Kafka Configuration - INTENTIONALLY DISABLED ====================
+  # ==================== Kafka Configuration - EMBEDIDO ====================
   kafka:
-    bootstrap-servers: localhost:9092
-    enabled: false
+    bootstrap-servers: localhost:19092
+    enabled: true
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -57,6 +57,8 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
       max-poll-records: 100
+    embedded:
+      enabled: true
 
 # ==================== Logging ====================
 logging:

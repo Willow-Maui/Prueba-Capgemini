@@ -1,5 +1,6 @@
 package com.capgemini.test.code.infrastructure.config;
 
+import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -26,7 +27,7 @@ import java.util.Map;
  * 3. Configurar productores y consumidores
  * 4. Manejo de retry y dead letter queue
  */
-/* @Configuration
+@Configuration
 @EnableKafka
 public class KafkaConfig {
 
@@ -113,6 +114,11 @@ public class KafkaConfig {
         adminConfigs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(adminConfigs);
     }
+
+    @PostConstruct
+    public void printKafkaServer() {
+        System.out.println("BOOTSTRAP SERVERS = "+ bootstrapServers.toString());
+    }
 }
-*/
+
 

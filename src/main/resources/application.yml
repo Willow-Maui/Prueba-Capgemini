@@ -5,7 +5,7 @@ spring:
   # ==================== WriteDB (PostgreSQL) - Base de datos de escritura (previa, sin cambios) ====================
   datasource:
     writedb:
-      url: jdbc:postgresql://localhost:5432/users
+      jdbc-url: jdbc:postgresql://localhost:5432/users
       username: user
       password: password
       driver-class-name: org.postgresql.Driver
@@ -17,9 +17,9 @@ spring:
 
     # ==================== ReadDB (MySQL) - Réplica de lectura (nueva) ====================
     readdb:
-      url: jdbc:mysql://localhost:3306/capgemini_readdb
-      username: root
-      password: root
+      jdbc-url: jdbc:mysql://localhost:3306/capgemini_readdb
+      username: user
+      password: password
       driver-class-name: com.mysql.cj.jdbc.Driver
       hikari:
         maximum-pool-size: 10
@@ -39,15 +39,16 @@ spring:
       ddl-auto: validate
 
   # ==================== Flyway Configuration ====================
-  # Desabilitado porque tenemos datasources personalizados (writedb/readdb)
-  # Spring Boot no puede auto-configurar Flyway correctamente
   flyway:
-    enabled: false
+    enabled: true
+    baseline-on-migrate: true
+    # WriteDB migrations (PostgreSQL - previa)
+    locations: classpath:db/migration/writedb
 
   # ==================== Kafka Configuration ====================
   # Kafka está embebido en la aplicación (no requiere servidor externo)
   kafka:
-    bootstrap-servers: localhost:9092  # (no se usa - solo referencia)
+    bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -60,6 +61,8 @@ spring:
       auto-offset-reset: earliest
       enable-auto-commit: false
       max-poll-records: 100
+    embedded:
+      enabled: false
 
 # ==================== Logging ====================
 logging:
