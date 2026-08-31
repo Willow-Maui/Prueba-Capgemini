@@ -15,6 +15,6 @@ CREATE TABLE IF NOT EXISTS users_read (
 );
 
 
-INSERT INTO users_read (name, email  role, room_id) VALUES
-                                                        ('Juan Pérez', 'juan@example.com','12345678A',13,'600000001','ADMIN', 1),
+INSERT INTO users_read (name, email,dni,phone, role, room_id) VALUES
+                                                        ('Juan Pérez', 'juan@example.com','12345678A','600000001','ADMIN', 1),
                                                         ('María López', 'maria@example.com','12345678B','600000002', 'USER', 2);
