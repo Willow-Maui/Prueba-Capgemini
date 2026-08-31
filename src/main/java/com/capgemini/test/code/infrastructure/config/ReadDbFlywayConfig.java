@@ -34,6 +34,7 @@ public class ReadDbFlywayConfig {
                 .dataSource(readdbDataSource)
                 .locations("classpath:db/migration/readdb")
                 .baselineOnMigrate(true)
+                .encoding("UTF-8")
                 .load();
 
         flyway.migrate();
