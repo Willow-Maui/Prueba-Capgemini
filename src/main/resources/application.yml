@@ -2,7 +2,7 @@ spring:
   application:
     name: capgemini-test
 
-  # ==================== WriteDB (PostgreSQL) - Base de datos de escritura (previa, sin cambios) ====================
+  # ==================== WriteDB (PostgreSQL) - Base de datos de escritura ====================
   datasource:
     writedb:
       jdbc-url: jdbc:postgresql://localhost:5432/users
@@ -15,7 +15,7 @@ spring:
         idle-timeout: 300000
         connection-timeout: 20000
 
-    # ==================== ReadDB (MySQL) - Réplica de lectura (nueva) ====================
+    # ==================== ReadDB (MySQL) - Réplica de lectura ====================
     readdb:
       jdbc-url: jdbc:mysql://localhost:3306/capgemini_readdb
       username: user
@@ -40,11 +40,7 @@ spring:
 
   # ==================== Flyway Configuration ====================
   flyway:
-    enabled: true
-    baseline-on-migrate: true
-    # WriteDB migrations (PostgreSQL - previa)
-    locations: classpath:db/migration/writedb
-
+    enabled: false
   # ==================== Kafka Configuration ====================
   # Kafka está embebido en la aplicación (no requiere servidor externo)
   kafka:
@@ -69,8 +65,11 @@ logging:
   level:
     root: INFO
     com.capgemini.test.code: DEBUG
-    org.springframework.kafka: INFO
-    org.apache.kafka: WARN
+    org.springframework.kafka: WARN
+    org.springframework.kafka.listener: ERROR
+    org.apache.kafka.clients.NetworkClient: ERROR
+    org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient: ERROR
+    org.apache.kafka: ERROR
     org.hibernate: INFO
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

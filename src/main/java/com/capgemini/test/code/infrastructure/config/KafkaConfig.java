@@ -10,6 +10,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
@@ -29,6 +30,7 @@ import java.util.Map;
  */
 @Configuration
 @EnableKafka
+@DependsOn("embeddedKafka")
 public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
@@ -113,11 +115,6 @@ public class KafkaConfig {
         Map<String, Object> adminConfigs = new HashMap<>();
         adminConfigs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         return new KafkaAdmin(adminConfigs);
-    }
-
-    @PostConstruct
-    public void printKafkaServer() {
-        System.out.println("BOOTSTRAP SERVERS = "+ bootstrapServers.toString());
     }
 }
 

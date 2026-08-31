@@ -2,6 +2,7 @@ package com.capgemini.test.code.infrastructure.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +21,7 @@ import java.util.Map;
  * Uso: mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=local"
  */
 @Configuration
-@ConditionalOnProperty(name = "kafka.embedded.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "spring.kafka.embedded.enabled", havingValue = "true")
 @Slf4j
 public class EmbeddedKafkaConfig {
 
@@ -42,11 +43,10 @@ public class EmbeddedKafkaConfig {
 
         kafkaBroker.brokerProperties(props);
 
-        kafkaBroker.kafkaPorts(19092);
+        kafkaBroker.brokerListProperty("spring.kafka.bootstrap-servers");
 
         kafkaBroker.afterPropertiesSet();
 
-        log.info("✅ Kafka embebido iniciado en puerto: {}", kafkaBroker.getBrokersAsString());
         return kafkaBroker;
     }
 
