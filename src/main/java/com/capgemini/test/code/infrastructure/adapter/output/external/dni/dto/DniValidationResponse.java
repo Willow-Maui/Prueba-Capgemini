@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 /**
  * DniValidationResponse - DTO para respuesta de API de validación de DNI
+ *
+ * Nota: La validez se determina ÚNICAMENTE por el status HTTP (según README),
+ * no por campos de la respuesta.
  */
 @Data
 @NoArgsConstructor
@@ -15,10 +18,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class DniValidationResponse {
 
-    @JsonProperty("valid")
-    private Boolean valid;
 
     @JsonProperty("message")
     private String message;
 }
+
+
 

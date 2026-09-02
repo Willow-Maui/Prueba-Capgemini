@@ -1,6 +1,7 @@
 package com.capgemini.test.code.infrastructure.config;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +57,7 @@ public class DataSourceConfig {
     @Bean(name = "writedbTransactionManager")
     @Primary
     public PlatformTransactionManager writedbTransactionManager(
+            @Qualifier("writedbEntityManagerFactory")
             EntityManagerFactory writedbEntityManagerFactory) {
         return new JpaTransactionManager(writedbEntityManagerFactory);
     }
@@ -81,14 +83,19 @@ public class DataSourceConfig {
         props.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         props.put("hibernate.format_sql", true);
         props.put("hibernate.use_sql_comments", true);
+        // ✅ CRÍTICO: Propiedades para transacciones correctas con múltiples DataSources (Hibernate 6.x)
+        props.put("hibernate.enable_lazy_load_no_trans", false);
 
         return em;
     }
 
     @Bean(name = "readdbTransactionManager")
     public PlatformTransactionManager readdbTransactionManager(
+            @Qualifier("readdbEntityManagerFactory")
             EntityManagerFactory readdbEntityManagerFactory) {
-        return new JpaTransactionManager(readdbEntityManagerFactory);
+        JpaTransactionManager tm = new JpaTransactionManager(readdbEntityManagerFactory);
+        tm.setEntityManagerFactory(readdbEntityManagerFactory);
+        return tm;
     }
 }
 

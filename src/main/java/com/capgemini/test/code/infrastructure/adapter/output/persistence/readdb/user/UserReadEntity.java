@@ -25,19 +25,19 @@ public class UserReadEntity {
     @Id
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 6)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true, length = 50)
+    @Column(name = "email", nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(name = "dni", nullable = false, unique = true, length = 9)
+    @Column(name = "dni", nullable = false, unique = true, length = 15)
     private String dni;
 
-    @Column(name = "phone", nullable = false, length = 9)
+    @Column(name = "phone", nullable = false, length = 15)
     private String phone;
 
-    @Column(name = "role", nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 50)
     private String role;
 
     @Column(name = "room_id", nullable = false)

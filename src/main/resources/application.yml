@@ -55,7 +55,8 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: readdb-sync-group
       auto-offset-reset: earliest
-      enable-auto-commit: false
+      enable-auto-commit: true
+      auto-commit-interval-ms: 1000
       max-poll-records: 100
     embedded:
       enabled: false
@@ -63,7 +64,7 @@ spring:
 # ==================== Logging ====================
 logging:
   level:
-    root: INFO
+    root: debug
     com.capgemini.test.code: DEBUG
     org.springframework.kafka: WARN
     org.springframework.kafka.listener: ERROR
@@ -71,6 +72,12 @@ logging:
     org.apache.kafka.clients.consumer.internals.ConsumerNetworkClient: ERROR
     org.apache.kafka: ERROR
     org.hibernate: INFO
+    org.springframework.transaction: TRACE
+    org.springframework.orm.jpa: TRACE
+    org.hibernate.engine.transaction: TRACE
+    org.springframework.orm.jpa.JpaTransactionManager: TRACE
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 

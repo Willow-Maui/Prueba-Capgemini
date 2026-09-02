@@ -15,6 +15,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,17 +99,21 @@ public class KafkaConfig {
         return new DefaultKafkaConsumerFactory<>(configProps);
     }
 
-    @Bean
-    public KafkaListenerContainerFactory<org.springframework.kafka.listener.ConcurrentMessageListenerContainer<String, String>>
-        kafkaListenerContainerFactory() {
-        org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory<String, String> factory =
-            new org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory<>();
-        factory.setConcurrency(3);
-        factory.setCommonErrorHandler(new org.springframework.kafka.listener.DefaultErrorHandler());
-        factory.getContainerProperties().setAckMode(org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL_IMMEDIATE);
-        factory.setConsumerFactory(consumerFactory());
-        return factory;
-    }
+     @Bean
+     public KafkaListenerContainerFactory<org.springframework.kafka.listener.ConcurrentMessageListenerContainer<String, String>>
+         kafkaListenerContainerFactory() {
+         org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory<String, String> factory =
+             new org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory<>();
+         factory.setConcurrency(3);
+
+         // Reintentos: máximo 3 intentos con 1 segundo entre reintentos
+         DefaultErrorHandler errorHandler = new DefaultErrorHandler(new FixedBackOff(1000, 3));
+         factory.setCommonErrorHandler(errorHandler);
+
+         factory.getContainerProperties().setAckMode(org.springframework.kafka.listener.ContainerProperties.AckMode.MANUAL);
+         factory.setConsumerFactory(consumerFactory());
+         return factory;
+     }
 
     // ==================== ADMIN ====================
 

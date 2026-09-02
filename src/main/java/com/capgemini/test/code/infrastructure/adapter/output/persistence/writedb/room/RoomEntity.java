@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class RoomEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name", nullable = false, length = 100)

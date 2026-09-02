@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 
 /**
@@ -36,7 +38,8 @@ public class EventEntity {
     @Column(name = "aggregate_type", nullable = false, length = 100)
     private String aggregateType;
 
-    @Column(name = "payload", nullable = false, columnDefinition = "JSON")
+    @Column(name = "payload", nullable = false, columnDefinition = "JSONB")
+    @JdbcTypeCode(SqlTypes.JSON)
     private String payload;
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -1,6 +1,6 @@
 -- ReadDB: Tabla de usuarios (réplica de lectura desnormalizada)
 CREATE TABLE IF NOT EXISTS users_read (
-    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     dni VARCHAR(15) NOT NULL UNIQUE,
@@ -15,6 +15,6 @@ CREATE TABLE IF NOT EXISTS users_read (
 );
 
 
-INSERT INTO users_read (name, email,dni,phone, role, room_id) VALUES
-                                                        ('Juan Pérez', 'juan@example.com','12345678A','600000001','ADMIN', 1),
-                                                        ('María López', 'maria@example.com','12345678B','600000002', 'USER', 2);
+INSERT INTO users_read (id,name, email,dni,phone, role, room_id) VALUES
+                                                        (1,'Juan Pérez', 'juan@example.com','12345678A','600000001','ADMIN', 1),
+                                                        (2,'María López', 'maria@example.com','12345678B','600000002', 'USER', 2);

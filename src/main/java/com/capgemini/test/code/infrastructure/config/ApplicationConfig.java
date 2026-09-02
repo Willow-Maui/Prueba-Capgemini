@@ -12,8 +12,13 @@ import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb
 import com.capgemini.test.code.infrastructure.adapter.output.persistence.writedb.room.RoomPersistenceAdapter;
 import com.capgemini.test.code.infrastructure.adapter.output.external.dni.DniValidationAdapter;
 import com.capgemini.test.code.infrastructure.adapter.output.external.notification.NotificationAdapter;
+import com.capgemini.test.code.infrastructure.adapter.output.event.UserDeserializer;
+import com.capgemini.test.code.infrastructure.adapter.output.event.RoomDeserializer;
+import com.capgemini.test.code.domain.user.model.User;
+import com.capgemini.test.code.domain.room.model.Room;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -128,14 +133,24 @@ public class ApplicationConfig {
      * Características:
      * - Soporta LocalDateTime y LocalDate
      * - No serializa fechas como timestamps
+     * - Registra deserializadores personalizados para User y Room
      *
      * @return ObjectMapper configurado
      */
     @Bean
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
+
+        // Configurar módulo de fechas
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Registrar deserializadores personalizados para entidades inmutables
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(User.class, new UserDeserializer());
+        module.addDeserializer(Room.class, new RoomDeserializer());
+        mapper.registerModule(module);
+
         return mapper;
     }
 }
